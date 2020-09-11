@@ -11,15 +11,16 @@ def main():
     return render_template("index.html")
 
 
-@socket_io.on('message')
+@socket_io.on('message', namespace='/req')
 def handle_message(message):
-    print('received message: ' + message)
-    send(message, broadcast=True, namespace='/test')
+    print('request message : ' + message)
+    send(message, broadcast=True, namespace='/req')
 
 
-@socket_io.on('message', namespace='/test')
+@socket_io.on('message', namespace='/resp')
 def send_message(message):
-    send(message, broadcast=True)
+    print('response message : ' + message)
+    send(message, broadcast=True, namespace='/resp')
 
 
 if __name__ == '__main__':

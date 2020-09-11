@@ -5,17 +5,25 @@
     <title>Title</title>
 </head>
 <body>
-
+    <div id="console">
+    </div>
+    <input type="text" id="stdin"><input type="button" value="전송" onclick="onClick()"/>
 </body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
         integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
-    let socket = io('http://' + document.domain + ':' + location.port + '/test');
-    socket.on('connect', function () {
-        socket.emit("message", "ls\n");
-    });
+    let req = io('http://' + document.domain + ':' + location.port + '/req');
+    let resp = io('http://' + document.domain + ':' + location.port + '/resp');
 
-    socket.on('message', data => {
+    function onClick() {
+        req.emit("message", $('#stdin').val() + "\n");
+        $('#stdin').val('');
+    }
+
+    resp.on('message', data => {
+        $('#console').append(data);
+        $('#console').append('</br>');
         console.log(data);
     });
 </script>
